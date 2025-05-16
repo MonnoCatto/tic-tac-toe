@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
-from game_logic import GameIterator, GameBoard
+from game_logic import GameBoardIterator, GameBoard
 
 class GameInterface:
 
@@ -10,7 +10,7 @@ class GameInterface:
 
     def __init__(self, master, game_board: GameBoard):
         self.game_board = game_board
-        self.game_iterator: GameIterator = game_board.board_iterator
+        self.game_iterator: GameBoardIterator = game_board.board_iterator
         self.master = master
         master.title("Tic-Tac-Tron")
 
@@ -69,7 +69,7 @@ class GameInterface:
             self.finalize_if_over()
 
     def restart(self):
-        self.game_board.reset()
+        self.game_iterator.restart(self.game_board)
         self.board_frame.config(bg="#555555")
         self.update_btn_info()
 

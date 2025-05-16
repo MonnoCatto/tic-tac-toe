@@ -5,8 +5,8 @@ from bots import MiniMaxBot
 def main():
     
     turn_handler = TurnHandler()
-    board_iterator = GameIterator(turn_handler)
-    game = GameBoard(turn_handler, board_iterator)
+    board_iterator = GameBoardIterator(turn_handler)
+    game = GameBoard(board_iterator)
     minimax = MiniMaxBot(board_iterator)
     board_iterator.add_bot(minimax)
     ui.start(game)
