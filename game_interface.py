@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
-from game_logic import GameBoardIterator, GameBoard
+from game_logic import GameBoardIterator
 
 class GameInterface:
 
@@ -8,7 +8,7 @@ class GameInterface:
     player_symbols = ["", "X", "O"]
     player_colors = ["white", "green", "red"]
 
-    def __init__(self, master, game_board: GameBoard):
+    def __init__(self, master, game_board):
         self.game_board = game_board
         self.game_iterator: GameBoardIterator = game_board.board_iterator
         self.master = master

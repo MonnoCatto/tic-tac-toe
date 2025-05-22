@@ -2,7 +2,6 @@ from random import *
 from debug_utils import MatrixPrinter as printer
 import copy
 from bots import GenericBot
-from game_interface import GameInterface
 
 class GameBoard:
     
@@ -151,7 +150,7 @@ class TurnHandler:
     
 class GameHandler:
 
-    def __init__(self, turn_handler: TurnHandler, board_iterator: GameBoardIterator, ui_manager: GameInterface):
+    def __init__(self, turn_handler: TurnHandler, board_iterator: GameBoardIterator):
         self.turn_handler = turn_handler
         self.board_iterator = board_iterator
         self.humans = 0
