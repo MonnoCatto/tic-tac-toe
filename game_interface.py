@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
 from game_logic import GameBoardIterator
+from threading import Thread
 
 class GameInterface:
 
@@ -9,6 +10,7 @@ class GameInterface:
     player_colors = ["white", "green", "red"]
 
     def __init__(self, master, game_board):
+        self.is_busy = False
         self.game_board = game_board
         self.game_iterator: GameBoardIterator = game_board.board_iterator
         self.master = master
@@ -57,7 +59,7 @@ class GameInterface:
             fg = "black",
             bg = "white"
         )
-        you_are_label.pack(side="left", anchor = "center", fill = "both", expand = True)
+        you_are_label.pack(side="left", pady=(0,20))
 
         self.player_label = tk.Label(
             self.text_frame,
@@ -66,10 +68,10 @@ class GameInterface:
             fg = self.player_colors[self.game_iterator.human_player+1],
             bg = "white"
         )
-        self.player_label.pack(side="left")
+        self.player_label.pack(side="left", pady=(0,20))
 
         # Restart option
-        btn_restart = tk.Button(
+        self.btn_restart = tk.Button(
             self.outer_frame,
             text = "Restart",
             width = 12,
@@ -80,15 +82,27 @@ class GameInterface:
             relief = "flat",
             command = self.restart
         )
-        btn_restart.pack(anchor = "center", fill = "both", expand = True)
+        self.btn_restart.pack(anchor = "center", fill = "both", expand = True)
 
     def perform_play(self, row, col):
-        if self.game_iterator.play(row, col, self.game_board):
-            self.update_btn_info()
-            self.finalize_if_over()
+        if self.is_busy or not self.game_iterator.play(row, col, self.game_board):
+            return
+        self.disable_GUI()
+        self.update_btn_info()
+        if self.finalize_if_over():
+            self.enable_GUI()
+
+        Thread(target=self.perform_bot_play).start()
+
+    def perform_bot_play(self):
         if self.game_iterator.bot_play(self.game_board):
-            self.update_btn_info()
-            self.finalize_if_over()
+            self.master.after(0, self.update_after_bot_play)
+    
+    def update_after_bot_play(self):
+        self.update_btn_info()
+        self.finalize_if_over()
+        self.enable_GUI()
+
 
     def restart(self):
         self.game_iterator.restart(self.game_board)
@@ -96,6 +110,14 @@ class GameInterface:
         self.update_btn_info()
         self.player_label["text"] = self.player_symbols[self.game_iterator.human_player+1]
         self.player_label["fg"] = self.player_colors[self.game_iterator.human_player+1]
+
+    def disable_GUI(self):
+        self.is_busy = True
+        self.btn_restart["state"] = "disabled"
+
+    def enable_GUI(self):
+        self.is_busy = False
+        self.btn_restart["state"] = "normal"
 
     def update_btn_info(self):
         for row in range(3):

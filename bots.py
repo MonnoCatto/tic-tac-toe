@@ -22,7 +22,6 @@ class MiniMaxBot():
         self.current_turn = 0
 
     def calculate_play(self, game_state):
-        print("Method called: calculate_play()")
         print("Analysing options...\n\n")
         self.maximizing_player = self.game_iterator.turn_handler.get_turn() +1
         self.current_turn = self.game_iterator.turn_handler.get_turn()
