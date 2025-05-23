@@ -32,6 +32,7 @@ class GameBoardIterator:
 
     def __init__(self, turn_handler):
         self.turn_handler = turn_handler
+        self.human_player = turn_handler.get_turn()
 
     def play(self, row, col, board: GameBoard):
         if not board.is_finished:
@@ -63,6 +64,7 @@ class GameBoardIterator:
     def restart(self, board:GameBoard):
         board.clear()
         self.turn_handler.start_new()
+        self.human_player = self.turn_handler.get_turn()
 
     def check_for_winner(self, board):
 

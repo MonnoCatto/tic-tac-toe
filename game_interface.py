@@ -15,12 +15,16 @@ class GameInterface:
         master.title("Tic-Tac-Tron")
 
         self.btn_font = tkFont.Font(family="Arial", size=42, weight="bold")
+        self.txt_font = tkFont.Font(family="Arial", size=26, weight="bold")
 
         self.outer_frame = tk.Frame(master, bg = "white")
         self.outer_frame.pack(expand=True, anchor="center")
 
         self.board_frame = tk.Frame(self.outer_frame, bg="#555555")
         self.board_frame.pack(expand=True, anchor="center")
+
+        self.text_frame = tk.Frame(self.outer_frame, bg="white")
+        self.text_frame.pack(expand=True, anchor="center")
 
         # Using buttons to create the playing grid
         self.buttons = []
@@ -45,6 +49,24 @@ class GameInterface:
                 btn.grid(row=row, column=col, padx=2, pady=2)
                 row_buttons.append(btn)
             self.buttons.append(row_buttons)
+
+        you_are_label = tk.Label(
+            self.text_frame,
+            text = "You are: ",
+            font = self.txt_font,
+            fg = "black",
+            bg = "white"
+        )
+        you_are_label.pack(side="left", anchor = "center", fill = "both", expand = True)
+
+        self.player_label = tk.Label(
+            self.text_frame,
+            text=self.player_symbols[self.game_iterator.human_player+1],
+            font=self.txt_font,
+            fg = self.player_colors[self.game_iterator.human_player+1],
+            bg = "white"
+        )
+        self.player_label.pack(side="left")
 
         # Restart option
         btn_restart = tk.Button(
@@ -72,6 +94,8 @@ class GameInterface:
         self.game_iterator.restart(self.game_board)
         self.board_frame.config(bg="#555555")
         self.update_btn_info()
+        self.player_label["text"] = self.player_symbols[self.game_iterator.human_player+1]
+        self.player_label["fg"] = self.player_colors[self.game_iterator.human_player+1]
 
     def update_btn_info(self):
         for row in range(3):
