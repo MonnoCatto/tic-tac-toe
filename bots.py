@@ -22,6 +22,20 @@ class MiniMaxBot():
         self.current_turn = 0
 
     def calculate_play(self, game_state):
+        if self.count_empty_spaces(game_state) == 9:
+            list_output = random.choices(
+                population= [
+                    [1, 1],
+                    [0, 0],
+                    [0, 2],
+                    [2, 0],
+                    [2, 2]
+                ],
+                weights=[0.5, 0.2, 0.2, 0.2, 0.2],
+            )
+            result = list_output[0]
+            print(f"trying to play: {result}")
+            return result
         print("Analysing options...\n\n")
         self.maximizing_player = self.game_iterator.turn_handler.get_turn() +1
         self.current_turn = self.game_iterator.turn_handler.get_turn()

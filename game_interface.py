@@ -46,7 +46,7 @@ class GameInterface:
                     relief = "flat",
                     highlightthickness = 0,
                     borderwidth = 0,
-                    command = lambda r=row, c=col: self.perform_play(r, c)
+                    command = lambda r=row, c=col: self.on_grid_cell_click(r, c)
                 )
                 btn.grid(row=row, column=col, padx=2, pady=2)
                 row_buttons.append(btn)
@@ -84,7 +84,7 @@ class GameInterface:
         )
         self.btn_restart.pack(anchor = "center", fill = "both", expand = True)
 
-    def perform_play(self, row, col):
+    def on_grid_cell_click(self, row, col):
         if self.is_busy or not self.game_iterator.play(row, col, self.game_board):
             return
         self.disable_GUI()
@@ -103,13 +103,16 @@ class GameInterface:
         self.finalize_if_over()
         self.enable_GUI()
 
-
     def restart(self):
         self.game_iterator.restart(self.game_board)
         self.board_frame.config(bg="#555555")
         self.update_btn_info()
         self.player_label["text"] = self.player_symbols[self.game_iterator.human_player+1]
         self.player_label["fg"] = self.player_colors[self.game_iterator.human_player+1]
+
+        if self.game_iterator.turn_handler.bot_goes_first:
+            self.disable_GUI()
+            Thread(target=self.perform_bot_play).start()
 
     def disable_GUI(self):
         self.is_busy = True

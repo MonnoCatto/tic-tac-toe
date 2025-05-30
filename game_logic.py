@@ -64,7 +64,6 @@ class GameBoardIterator:
     def restart(self, board:GameBoard):
         board.clear()
         self.turn_handler.start_new()
-        self.human_player = self.turn_handler.get_turn()
 
     def check_for_winner(self, board):
 
@@ -130,6 +129,7 @@ class TurnHandler:
         self.number_of_players = number_of_players
         self.first_turn = turn_offset % number_of_players
         self.turn = self.first_turn
+        self.bot_goes_first = False
 
     def advance(self):
         self.turn = (self.turn + 1) % self.number_of_players
@@ -140,6 +140,7 @@ class TurnHandler:
     def start_new(self):
         self.first_turn = (self.first_turn + 1) % self.number_of_players
         self.turn = self.first_turn
+        self.bot_goes_first = not self.bot_goes_first
 
     def random(self):
         self.turn = random.randint(0, (self.number_of_players-1))
@@ -149,18 +150,3 @@ class TurnHandler:
         self.turn_offset = random.randint(0, (self.number_of_players-1))
         self.turn = self.turn_offset
         return self.current()
-    
-class GameHandler:
-
-    def __init__(self, turn_handler: TurnHandler, board_iterator: GameBoardIterator):
-        self.turn_handler = turn_handler
-        self.board_iterator = board_iterator
-        self.humans = 0
-        self.bots = 0
-
-    def handle_click(self, row, col):
-        if not self.check_if_human_turn():
-            return
-        
-    def check_if_human_turn(self):
-        return self.turn_handler.get_turn() < self.humans
