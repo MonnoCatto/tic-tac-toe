@@ -54,21 +54,27 @@ class MiniMaxBot():
         return random.choice(best_plays)
                 
     def minimax(self, game_state, depth, maximizing_player_turn, current_turn):
+
+        # If max depth is reached, or if the current game state is finished,
+        # evaluate current state and return the value.
         if depth == 0 or self.is_state_finished(game_state):
             return self.evaluate(game_state)
         next_turn = ((current_turn +1) % self.number_of_players)
+
+        # If it is the bot's turn, run this block
         if maximizing_player_turn:
-            max_eval = -9999
-            for child in self.generate_children(game_state, next_turn):
-                current_eval = self.minimax(child, depth-1, False, next_turn)
-                max_eval = max(max_eval, current_eval)
+            max_eval = -9999 # Represents negative infinity
+            for child in self.generate_children(game_state, next_turn): # Generate a "child" game state for every possible move
+                current_eval = self.minimax(child, depth-1, False, next_turn) # Read evaluation from child game state
+                max_eval = max(max_eval, current_eval) # Retain the greatest evaluation
             return max_eval
         
+        # If it is not the bot's turn, run this block
         else:
-            min_eval = 9999
-            for child in self.generate_children(game_state, next_turn):
-                current_eval = self.minimax(child, depth-1, True, next_turn)
-                min_eval = min(min_eval, current_eval)
+            min_eval = 9999 # Represents infinity
+            for child in self.generate_children(game_state, next_turn): # Generate a "child" game state for every possible move
+                current_eval = self.minimax(child, depth-1, True, next_turn) # Read evaluation from child game state
+                min_eval = min(min_eval, current_eval) # Retain the smallest evaluation
             return min_eval
     
     def generate_children(self, game_state, current_turn):
